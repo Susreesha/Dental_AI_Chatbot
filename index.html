@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Dental Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 400px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            scroll-behavior: smooth;
+        }
+        .input-box {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .message {
+            margin: 5px 0;
+        }
+
+        .user {
+            text-align: right;
+            color: blue;
+        }
+
+        .bot {
+            text-align: left;
+            color: green;
+        }
+        
+        .bubble {
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            margin: 5px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .user-bubble {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .bot-bubble {
+            background: #e5e5e5;
+            color: black;
+            margin-right: auto;
+        }
+        .header {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 8px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .quick-buttons button {
+            flex: 1;
+            font-size: 12px;
+            padding: 6px;
+            border-radius: 6px;
+            background: #c8e6c9;
+        }
+
+        .quick-buttons button.selected {
+            background: #4CAF50;
+            color: white;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            margin: 5px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            background: #2196F3;
+        }
+        @media (max-width: 500px) {
+        .chat-container {
+            width: 95%;
+            height: 95vh;
+                }
+
+            .bubble {
+                max-width: 85%;
+            }
+        }
+        .section-title {
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .warning {
+            margin-top: 10px;
+            font-weight: 500;
+            color: #d9534f;
+        }
+        .cta-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .cta-container button {
+            flex: 1;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="chat-container">
+    <div class="header">🦷 AI Dental Assistant</div>
+    <div class="chat-box" id="chatBox"></div>
+</div>
+
+<script>
+
+// ---------------- STATE ----------------
+let tempConditions = [];
+
+// ---------------- INIT ----------------
+window.onload = function(){
+    startFlow();
+};
+
+function startFlow(){
+    state = {
+        complaint: null,
+        severity: null,
+        duration: null,
+        conditions: []
+    }
+    let chatBox = document.getElementById("chatBox");
+    chatBox.innerHTML = "";
+
+    chatBox.innerHTML += `
+    <div class="bubble bot-bubble">
+    👋 Hi! I'm your AI Dental Assistant 🦷 <br><br>
+    Tell me your problem 👇
+    </div>
+
+    <div class="quick-buttons">
+        <button onclick="selectComplaint('tooth_pain')">🦷 Tooth Pain</button>
+        <button onclick="selectComplaint('bleeding_gums')">🩸 Bleeding Gums</button>
+        <button onclick="selectComplaint('bad_breath')">😷 Bad Breath</button>
+        <button onclick="selectComplaint('sensitivity')">❄️ Sensitivity</button>
+    </div>
+    `;
+}
+
+// ---------------- FLOW ----------------
+
+function selectComplaint(value){
+    state.complaint = value;
+    askSeverity();
+}
+
+function askSeverity(){
+    appendBot(`
+    How severe is your issue?
+    `, [
+        ["Mild","mild"],
+        ["Moderate","moderate"],
+        ["Severe","severe"]
+    ], selectSeverity);
+}
+
+function selectSeverity(val){
+    state.severity = val;
+    askDuration();
+}
+
+function askDuration(){
+    appendBot(`
+    How long have you had this issue?
+    `, [
+        ["< 1 week","<1w"],
+        ["1–2 weeks","1-2w"],
+        ["> 2 weeks",">2w"]
+    ], selectDuration);
+}
+
+function selectDuration(val){
+    state.duration = val;
+    askConditions();
+}
+
+function askConditions(){
+    tempConditions = []; // reset
+
+    let chatBox = document.getElementById("chatBox");
+
+    chatBox.innerHTML += `
+    <div class="bubble bot-bubble">
+        Any medical conditions? (Select all that apply)
+
+        <div class="quick-buttons" id="conditionButtons">
+            <button onclick="toggleCondition(this,'diabetes')">Diabetes</button>
+            <button onclick="toggleCondition(this,'blood_pressure')">Blood Pressure</button>
+            <button onclick="toggleCondition(this,'smoking')">Smoking</button>
+            <button onclick="toggleCondition(this,'pregnancy')">Pregnancy</button>
+            <button onclick="toggleCondition(this,'heart_disease')">Heart Disease</button>
+            <button onclick="toggleCondition(this,'blood_thinners')">Blood Thinners</button>
+            <button onclick="toggleCondition(this,'other')">Other</button>
+            <button onclick="toggleCondition(this,'none')">None</button>
+        </div>
+
+        <br>
+        <button onclick="confirmConditions()">Continue ➡️</button>
+    </div>
+    `;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+function toggleCondition(btn, value){
+    // Special case: "none"
+    if(value === "none"){
+        tempConditions = [];
+        document.querySelectorAll("#conditionButtons button").forEach(b => {
+            b.classList.remove("selected");
+        });
+        btn.classList.add("selected");
+        tempConditions.push("none");
+        return;
+    }
+
+    // remove "none" if selected
+    tempConditions = tempConditions.filter(c => c !== "none");
+    document.querySelectorAll("#conditionButtons button").forEach(b => {
+        if(b.innerText === "None") b.classList.remove("selected");
+    });
+
+    if(tempConditions.includes(value)){
+        tempConditions = tempConditions.filter(c => c !== value);
+        btn.classList.remove("selected");
+    } else {
+        tempConditions.push(value);
+        btn.classList.add("selected");
+    }
+}
+function confirmConditions(){
+    if(tempConditions.length === 0){
+    alert("Please select at least one option or 'None'");
+    return;
+    }
+    state.conditions = tempConditions;
+    generateAdvice();
+}
+
+// ---------------- LOGIC ----------------
+
+function evaluateCase(){
+
+    let risk = "medium";
+
+    // Step 1: Base on symptoms
+    if(state.severity === "severe" || state.duration === ">2w"){
+        risk = "high";
+    }
+    else if(state.severity === "mild" && state.duration === "<1w"){
+        risk = "low";
+    }
+
+    // Step 2: Modify using conditions
+    if(state.conditions.length > 0 && !state.conditions.includes("none")){
+        if(risk === "low"){
+            risk = "medium";  // upgrade slightly
+        }
+        else if(risk === "medium"){
+            risk = "high";    // upgrade more
+        }
+    }
+
+    return risk;
+}
+
+async function generateAdvice() {
+    let chatBox = document.getElementById("chatBox");
+
+    let loading = `
+    <div class="message bot">
+        <div class="bubble bot-bubble">Typing...</div>
+    </div>`;
+    chatBox.innerHTML += loading;
+
+    let context = {
+        complaint: state.complaint,
+        severity: state.severity,
+        duration: state.duration,
+        conditions: state.conditions,
+        risk: evaluateCase()
+    };
+
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+
+    let response = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ context, history })
+    });
+
+    let data = await response.json();
+
+    document.getElementById("loading")?.remove();
+
+    chatBox.innerHTML += `
+    <div class="message bot">
+        <div class="bubble bot-bubble">
+            ${formatResponse(data.response)}
+
+            <div class="cta-container">
+                <button onclick="consult()">💬 Consult</button>
+                <button onclick="book()">📅 Book</button>
+            </div>
+        </div>
+    </div>
+    `;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+// ---------------- HELPER ----------------
+
+function appendBot(text, options, callback){
+    let chatBox = document.getElementById("chatBox");
+
+    let buttons = options.map(opt => 
+        `<button onclick="${callback.name}('${opt[1]}')">${opt[0]}</button>`
+    ).join("");
+
+    chatBox.innerHTML += `
+    <div class="bubble bot-bubble">
+        ${text}
+        <div class="quick-buttons">${buttons}</div>
+    </div>
+    `;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+
+</script>
+
+</body>
+</html>
