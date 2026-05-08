@@ -21,7 +21,8 @@ AI-assisted dental symptom assessment chatbot prototype designed to reduce patie
 ### response - if no option selected
 ![no option selected](images/no-option-selected.png)
 
-
+### response
+![Response AI](images/response-ai.png)
 
 
 ## Overview
