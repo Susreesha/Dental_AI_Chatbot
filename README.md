@@ -2,9 +2,9 @@
 
 AI-assisted dental symptom assessment chatbot prototype designed to reduce patient uncertainty and guide users toward informed dental care decisions.
 
----
 
-## 📸 Preview
+
+## Preview
 
 ### Chatbot Introduction
 ![Chatbot Introduction](images/chatbot-introduction.png)
@@ -22,9 +22,9 @@ AI-assisted dental symptom assessment chatbot prototype designed to reduce patie
 ![no option selected](images/no-option-selected.png)
 
 
----
 
-## 📌 Overview
+
+## Overview
 
 This project explores how conversational healthcare interfaces can make early dental guidance more approachable, interactive, and patient-friendly.
 
@@ -35,36 +35,36 @@ Many patients delay dental consultations because they are unsure about:
 
 This chatbot prototype aims to reduce that uncertainty through a guided assessment experience.
 
----
 
-## ✨ Features
 
-### 🦷 Symptom Selection
+## Features
+
+### Symptom Selection
 Users can choose common dental concerns such as:
 - Tooth Pain
 - Bleeding Gums
 - Bad Breath
 - Sensitivity
 
----
 
-### 📊 Severity Assessment
+
+### Severity Assessment
 Interactive severity selection:
 - Mild
 - Moderate
 - Severe
 
----
 
-### ⏳ Duration Tracking
+
+### Duration Tracking
 Users can indicate symptom duration:
 - < 1 week
 - 1–2 weeks
 - > 2 weeks
 
----
 
-### 🏥 Medical Condition Screening
+
+### Medical Condition Screening
 Healthcare-aware intake flow including:
 - Diabetes
 - Blood Pressure
@@ -73,9 +73,9 @@ Healthcare-aware intake flow including:
 - Pregnancy
 - Blood Thinners
 
----
 
-## 🎯 Project Goals
+
+## Project Goals
 
 - Reduce patient uncertainty
 - Improve accessibility through conversational UX
@@ -83,17 +83,17 @@ Healthcare-aware intake flow including:
 - Create a clean healthcare-focused interface
 - Explore AI-assisted healthcare workflows
 
----
 
-## 🛠 Tech Stack
+
+## Tech Stack
 
 - HTML
 - CSS
 - JavaScript
 
----
 
-## 📱 UI/UX Focus
+
+## UI/UX Focus
 
 The project follows a:
 - Mobile-first layout
@@ -102,9 +102,9 @@ The project follows a:
 - Clean card-based structure
 - Patient-friendly experience
 
----
 
-## 🚀 Future Improvements
+
+## Future Improvements
 
 Planned enhancements:
 - AI-generated responses
@@ -114,16 +114,16 @@ Planned enhancements:
 - Medication monitoring
 - Doctor dashboard integration
 
----
 
-## ⚠ Disclaimer
+
+## Disclaimer
 
 This project is a healthcare UX/UI prototype created for educational and portfolio purposes only.  
 It is not intended for real medical diagnosis or treatment.
 
----
 
-## 👩‍💻 Author
+
+## Author
 
 ### Susreesha Vanam
 Healthcare UX / Product Design  
